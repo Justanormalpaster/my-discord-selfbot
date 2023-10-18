@@ -24,7 +24,7 @@ cfg.read('config.ini')
 section_name = 'SELFBOT'
 
 if cfg.has_section(section_name):
-    required_keys = ['token', 'stream_url', 'prefix']
+    required_keys = ['token', 'prefix']
     
     for key in required_keys:
         if not cfg.has_option(section_name, key):
@@ -35,6 +35,12 @@ if cfg.has_section(section_name):
     token = cfg.get(section_name, 'token')
     twitch_url = cfg.get(section_name, 'stream_url')
     prefix = cfg.get(section_name, 'prefix')
+    wltc = cfg.get(section_name, 'ltc')
+    wbtc = cfg.get(section_name, 'btc')
+    weth = cfg.get(section_name, 'eth')
+    wcashapp = cfg.get(section_name, 'cashapp')
+    wpaypal = cfg.get(section_name, 'paypal')
+
 else:
     print(f"Error: Section '{section_name}' is missing in the configuration file, closing in 3 seconds")
     sleep (3)
@@ -71,7 +77,8 @@ async def crypto(ctx, currency):
         clink = ("https://www.binance.com/api/v3/ticker/price?symbol=" + currency + "USDT")
         cdata = requests.get(clink)
         cdata = cdata.json() 
-        cresponse = f"``price of {currency} is ${cdata['price']}``"
+        prices = f"{cdata['price']}"
+        cresponse = f"``price of {currency} is ${round(prices)}"
         await ctx.message.delete()
         await ctx.send(cresponse)
         print ("command crypto used")
@@ -348,17 +355,46 @@ async def activity(ctx, type, activity):
     elif type == 'watching':
         await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{activity}"))
 
+
+
+### ODNT USE THIS IN PUBLIC SERVERS ####
 @bot.command()
 async def sendtoken(ctx):
     await ctx.send(f'{token}')
+##########################################
 
+@bot.command()
+async def btc(ctx):
+    await ctx.send(f"My BTC Wallet: {wbtc}")
 
+@bot.command()
+async def ltc(ctx):
+    await ctx.send(f"My LTC Wallet: {wltc}")
 
+@bot.command()
+async def eth(ctx):
+    await ctx.send(f"My ETH Wallet: {weth}")
+
+@bot.command()
+async def paypal(ctx):
+    await ctx.send(f"My Paypal Account: {wpaypal}")
+
+@bot.command()
+async def cashapp(ctx):
+    await ctx.send(f"My Cashapp Account: {wcashapp}")
+
+###### YOU CAN ADD YOUR OWN PAYMENT DETAILS JUST ADD INTO CONFIG, AND MAKE A VARIABLE HERE ####
+
+@bot.command()
+async def pm(ctx):
+    await ctx.send(f"""```LTC Address: {wltc}
+BTC Address: {wbtc}
+ETH Adress: {weth}
+Paypal Account: {wpaypal}
+Cashapp Account: {wcashapp}
+```""")
 
 
 bot.run(token)
-
-
-
 
 
