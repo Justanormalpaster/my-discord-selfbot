@@ -394,6 +394,20 @@ Paypal Account: {wpaypal}
 Cashapp Account: {wcashapp}
 ```""")
 
+@bot.command()
+async def randomfact(ctx):
+    fact = requests.get("https://uselessfacts.jsph.pl/api/v2/facts/random?language=en")
+    data = fact.json()
+    await ctx.send(data["text"])
+
+@bot.command()
+async def randomjoke(ctx):
+    joke = requests.get("https://v2.jokeapi.dev/joke/Any")
+    data = joke.json()
+    await ctx.send(data["setup"])
+    sleep(2)
+    await ctx.send(data["delivery"])
+
 
 bot.run(token)
 
